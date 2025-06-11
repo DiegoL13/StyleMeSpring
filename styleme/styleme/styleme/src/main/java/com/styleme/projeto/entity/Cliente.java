@@ -30,6 +30,10 @@ public class Cliente {
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
     private Avatar avatar;
 
+    public Cliente() {
+
+    }
+
     public String getSenha() {
         return senha;
     }
