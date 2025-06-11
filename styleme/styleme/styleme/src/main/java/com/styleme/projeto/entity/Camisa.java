@@ -28,7 +28,7 @@ public class Camisa extends Roupa {
     private int braco;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_roupa", nullable = false)
+    @JoinColumn(name = "id_roupa", nullable = false,insertable=false, updatable=false)
     private Roupa roupaRelacionada;
 
     @Override

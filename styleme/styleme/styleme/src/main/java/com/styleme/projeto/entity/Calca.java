@@ -28,7 +28,7 @@ public class Calca extends Roupa {
     private int perna;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_roupa", nullable = false)
+    @JoinColumn(name = "id_roupa", nullable = false,insertable=false, updatable=false)
     private Roupa roupaRelacionada;
 
 
