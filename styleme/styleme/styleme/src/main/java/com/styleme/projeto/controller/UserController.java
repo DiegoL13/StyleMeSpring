@@ -1,6 +1,5 @@
 package com.styleme.projeto.controller;
 
-import com.styleme.projeto.entity.Avatar;
 import com.styleme.projeto.entity.Cliente;
 import com.styleme.projeto.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class UserController {
 
     private final UserService userService;
@@ -19,57 +18,38 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Cliente cliente) {
-        try {
-            Cliente novoCliente = userService.registerUser(cliente);
-            return ResponseEntity.ok(novoCliente);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam String email, @RequestParam String senha) {
-        return userService.authenticateUser(email, senha)
-                ? ResponseEntity.ok("Login bem-sucedido!")
-                : ResponseEntity.status(401).body("Credenciais inválidas!");
+    // CREATE - Registrar novo usuário
+    @PostMapping
+    public ResponseEntity<Cliente> createUser(@RequestBody Cliente cliente) {
+        Cliente novoCliente = userService.createUser(cliente);
+        return ResponseEntity.ok(novoCliente);
     }
 
     // READ - Buscar todos os usuários
     @GetMapping
     public ResponseEntity<List<Cliente>> getAllUsers() {
-        return ResponseEntity.ok(userService.findAllUsers());
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
     // READ - Buscar usuário por ID
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable UUID id) {
-        return userService.findUserById(id)
+    public ResponseEntity<Cliente> getUserById(@PathVariable UUID id) {
+        return userService.getUserById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     // UPDATE - Atualizar usuário
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable UUID id, @RequestBody Cliente cliente) {
-        try {
-            cliente.setId(id); // Garante que o ID do path é usado
-            Cliente clienteAtualizado = userService.updateUser(cliente);
-            return ResponseEntity.ok(clienteAtualizado);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Cliente> updateUser(@PathVariable UUID id, @RequestBody Cliente cliente) {
+        Cliente clienteAtualizado = userService.updateUser(id, cliente);
+        return ResponseEntity.ok(clienteAtualizado);
     }
 
     // DELETE - Remover usuário
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable UUID id) {
-        if (userService.deleteUser(id)) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<Void> deleteUser(@PathVariable UUID id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -26,4 +26,3 @@ public class Avatar {
     private int perna;
 
 }
-

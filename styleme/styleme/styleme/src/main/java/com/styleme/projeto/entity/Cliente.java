@@ -7,7 +7,6 @@ import java.util.UUID;
 
 @Entity
 @Data
-@AllArgsConstructor
 @Table(name = "Cliente")
 public class Cliente {
     @Id
@@ -30,9 +29,14 @@ public class Cliente {
     @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
     private Avatar avatar;
 
-    public Cliente() {
-
+    public Cliente(String nome, String cpf, String email, String senha) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.senha = senha;
     }
+
+    public Cliente() {}
 
     public String getSenha() {
         return senha;
